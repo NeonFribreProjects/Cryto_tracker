@@ -56,12 +56,6 @@ export function AddPurchaseForm({ onPurchaseAdded }: AddPurchaseFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    if (!validateSymbol(symbol)) {
-      setError(`"${symbol}" is not a supported cryptocurrency. Please select from the suggestions.`);
-      return;
-    }
-
     setLoading(true);
 
     try {

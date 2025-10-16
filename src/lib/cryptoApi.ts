@@ -64,6 +64,16 @@ export const SUPPORTED_CRYPTOS = [
   { symbol: 'XLM', id: 'stellar', name: 'Stellar' },
   { symbol: 'ALGO', id: 'algorand', name: 'Algorand' },
   { symbol: 'FIL', id: 'filecoin', name: 'Filecoin' },
+  { symbol: 'SUI', id: 'sui', name: 'Sui' },
+  { symbol: 'APT', id: 'aptos', name: 'Aptos' },
+  { symbol: 'ARB', id: 'arbitrum', name: 'Arbitrum' },
+  { symbol: 'OP', id: 'optimism', name: 'Optimism' },
+  { symbol: 'INJ', id: 'injective-protocol', name: 'Injective' },
+  { symbol: 'TIA', id: 'celestia', name: 'Celestia' },
+  { symbol: 'SEI', id: 'sei-network', name: 'Sei' },
+  { symbol: 'STX', id: 'blockstack', name: 'Stacks' },
+  { symbol: 'NEAR', id: 'near', name: 'NEAR Protocol' },
+  { symbol: 'ICP', id: 'internet-computer', name: 'Internet Computer' },
 ];
 
 function getCoinId(symbol: string): string {
