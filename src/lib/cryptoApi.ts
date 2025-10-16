@@ -5,19 +5,27 @@ export interface CryptoPrice {
 
 export async function getCurrentPrice(symbol: string): Promise<number> {
   try {
-    const response = await fetch(
-      `https://api.coingecko.com/api/v3/simple/price?ids=${getCoinId(symbol)}&vs_currencies=usd`
-    );
-    const data = await response.json();
     const coinId = getCoinId(symbol);
+    const response = await fetch(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${coinId}&vs_currencies=usd`,
+      {
+        signal: AbortSignal.timeout(10000)
+      }
+    );
 
-    if (!data[coinId]) {
-      throw new Error(`Price not found for ${symbol}`);
+    if (!response.ok) {
+      throw new Error(`API returned ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data[coinId] || !data[coinId].usd) {
+      throw new Error(`Price not found for ${symbol} (${coinId})`);
     }
 
     return data[coinId].usd;
   } catch (error) {
-    console.error('Error fetching current price:', error);
+    console.error(`Error fetching current price for ${symbol}:`, error);
     throw error;
   }
 }
@@ -28,17 +36,25 @@ export async function getHistoricalPrice(symbol: string, date: Date): Promise<nu
     const formattedDate = formatDateForApi(date);
 
     const response = await fetch(
-      `https://api.coingecko.com/api/v3/coins/${coinId}/history?date=${formattedDate}`
+      `https://api.coingecko.com/api/v3/coins/${coinId}/history?date=${formattedDate}`,
+      {
+        signal: AbortSignal.timeout(10000)
+      }
     );
+
+    if (!response.ok) {
+      throw new Error(`API returned ${response.status}`);
+    }
+
     const data = await response.json();
 
     if (!data.market_data?.current_price?.usd) {
-      throw new Error(`Historical price not found for ${symbol} on ${formattedDate}`);
+      throw new Error(`Historical price not found for ${symbol} (${coinId}) on ${formattedDate}`);
     }
 
     return data.market_data.current_price.usd;
   } catch (error) {
-    console.error('Error fetching historical price:', error);
+    console.error(`Error fetching historical price for ${symbol}:`, error);
     throw error;
   }
 }
@@ -74,6 +90,16 @@ export const SUPPORTED_CRYPTOS = [
   { symbol: 'STX', id: 'blockstack', name: 'Stacks' },
   { symbol: 'NEAR', id: 'near', name: 'NEAR Protocol' },
   { symbol: 'ICP', id: 'internet-computer', name: 'Internet Computer' },
+  { symbol: 'IOTEX', id: 'iotex', name: 'IoTeX' },
+  { symbol: 'HBAR', id: 'hedera-hashgraph', name: 'Hedera' },
+  { symbol: 'VET', id: 'vechain', name: 'VeChain' },
+  { symbol: 'FTM', id: 'fantom', name: 'Fantom' },
+  { symbol: 'SAND', id: 'the-sandbox', name: 'The Sandbox' },
+  { symbol: 'MANA', id: 'decentraland', name: 'Decentraland' },
+  { symbol: 'AXS', id: 'axie-infinity', name: 'Axie Infinity' },
+  { symbol: 'GALA', id: 'gala', name: 'Gala' },
+  { symbol: 'THETA', id: 'theta-token', name: 'Theta Network' },
+  { symbol: 'XTZ', id: 'tezos', name: 'Tezos' },
 ];
 
 function getCoinId(symbol: string): string {
