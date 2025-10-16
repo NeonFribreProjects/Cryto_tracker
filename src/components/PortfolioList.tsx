@@ -31,7 +31,7 @@ export function PortfolioList({ refreshTrigger }: PortfolioListProps) {
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [purchases.length]);
+  }, [purchases]);
 
   const fetchPurchases = async () => {
     try {
